@@ -92,7 +92,9 @@ namespace Penumbra
         public void PreRender()
         {
             // Store currently active render targets so we can reset them once we are done blending the lightmap.
-            Device.GetRenderTargets(Textures.GetOriginalRenderTargetBindingsForQuery());
+            //Device.GetRenderTargets(Textures.GetOriginalRenderTargetBindingsForQuery());
+            RenderTargetBinding[] binding = Device.GetRenderTargets();
+            Array.Copy(binding, Textures.GetOriginalRenderTargetBindingsForQuery(), binding.Length);
 
             // Switch render target to a diffuse map. This is where users will render content to be lit.
             Device.SetRenderTargets(Textures.DiffuseMapBindings);

@@ -24,16 +24,18 @@ namespace Penumbra
 
         private bool _initialized;
         private bool _beginDrawCalled;
+        private String _folder;
 
         /// <summary>
         /// Constructs a new instance of <see cref="PenumbraComponent"/>.
         /// </summary>
         /// <param name="game">Game object to associate the engine with.</param>
-        public PenumbraComponent(Game game)
+        public PenumbraComponent(Game game, String folder)
             : base(game)
         {
             // We only need to draw this component.
             Enabled = false;
+            this._folder = folder;
         }
 
         /// <summary>
@@ -103,19 +105,13 @@ namespace Penumbra
             if (_initialized) return;
 
             base.Initialize();
-            var deviceManager = (GraphicsDeviceManager)Game.Services.GetService<IGraphicsDeviceManager>();
-            _content = new ResourceContentManager(Game.Services,
-#if DESKTOPGL
-                MonoGame.Penumbra.DesktopGL.Resource_DesktopGL.ResourceManager
-#else
-                MonoGame.Penumbra.WindowsDX.Resource_WindowsDX.ResourceManager
-#endif
-            );
+            var deviceManager = (GraphicsDeviceManager)Game.Services.GetService(typeof(IGraphicsDeviceManager));
+            _content = Game.Content;
             _engine.Load(GraphicsDevice, deviceManager, Game.Window,
-                _content.Load<Effect>("PenumbraHull"),
-                _content.Load<Effect>("PenumbraLight"),
-                _content.Load<Effect>("PenumbraShadow"),
-                _content.Load<Effect>("PenumbraTexture"));
+                _content.Load<Effect>(_folder + "PenumbraHull"),
+                _content.Load<Effect>(_folder + "PenumbraLight"),
+                _content.Load<Effect>(_folder + "PenumbraShadow"),
+                _content.Load<Effect>(_folder + "PenumbraTexture"));
             _initialized = true;
         }
 
